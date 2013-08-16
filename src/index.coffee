@@ -15,6 +15,4 @@ module.exports = new class Index
     compiled = "module.exports = function() { return '#{source}'; };"
     compiled = compiled.replace /\n/g, "\\\n"
 
-    console.log  compiled
-
     done compiled, null

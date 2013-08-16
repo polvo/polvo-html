@@ -22,7 +22,6 @@ module.exports = new (Index = (function() {
     var compiled;
     compiled = "module.exports = function() { return '" + source + "'; };";
     compiled = compiled.replace(/\n/g, "\\\n");
-    console.log(compiled);
     return done(compiled, null);
   };
 
