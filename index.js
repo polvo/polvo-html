@@ -10,9 +10,11 @@ module.exports = new (Index = (function() {
 
   Index.prototype.polvo = true;
 
-  Index.prototype.type = 'js';
+  Index.prototype.type = 'template';
 
   Index.prototype.name = 'html';
+
+  Index.prototype.output = 'js';
 
   Index.prototype.ext = /\.html?$/m;
 

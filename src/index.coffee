@@ -5,8 +5,10 @@ module.exports = new class Index
 
   polvo: true
 
-  type: 'js'
+  type: 'template'
   name: 'html'
+  output: 'js'
+
   ext: /\.html?$/m
   exts: ['.html', '.html']
 
