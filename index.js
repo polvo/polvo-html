@@ -20,7 +20,7 @@ module.exports = new (Index = (function() {
 
   Index.prototype.exts = ['.html', '.html'];
 
-  Index.prototype.compile = function(filepath, source, debug, done) {
+  Index.prototype.compile = function(filepath, source, debug, error, done) {
     var compiled;
     compiled = "module.exports = function() { return '" + source + "'; };";
     compiled = compiled.replace(/\n/g, "\\\n");

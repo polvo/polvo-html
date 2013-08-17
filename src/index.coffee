@@ -12,7 +12,7 @@ module.exports = new class Index
   ext: /\.html?$/m
   exts: ['.html', '.html']
 
-  compile:( filepath, source, debug, done )->
+  compile:( filepath, source, debug, error, done )->
     
     compiled = "module.exports = function() { return '#{source}'; };"
     compiled = compiled.replace /\n/g, "\\\n"
