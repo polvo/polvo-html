@@ -14,7 +14,7 @@ module.exports = new class Index
 
   compile:( filepath, source, debug, error, done )->
     
+    source = source.replace(/\n/g, '\\\n').replace '\'', '\\\''
     compiled = "module.exports = function() { return '#{source}'; };"
-    compiled = compiled.replace /\n/g, "\\\n"
 
     done compiled, null

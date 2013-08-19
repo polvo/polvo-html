@@ -22,8 +22,8 @@ module.exports = new (Index = (function() {
 
   Index.prototype.compile = function(filepath, source, debug, error, done) {
     var compiled;
+    source = source.replace(/\n/g, '\\\n').replace('\'', '\\\'');
     compiled = "module.exports = function() { return '" + source + "'; };";
-    compiled = compiled.replace(/\n/g, "\\\n");
     return done(compiled, null);
   };
 
