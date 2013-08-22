@@ -39,7 +39,7 @@ module.exports = new (Index = (function() {
   };
 
   Index.prototype.resolve_dependents = function(file, files) {
-    var dependents, dirpath, each, full_id, has_includes, match, match_all, name, short_id, _i, _len;
+    var dependents, dirpath, each, full_id_a, full_id_b, has_includes, match, match_all, name, short_id, _i, _len;
     dependents = [];
     has_includes = /\<!--#include\s*file\s*=/gm;
     for (_i = 0, _len = files.length; _i < _len; _i++) {
@@ -52,11 +52,16 @@ module.exports = new (Index = (function() {
       match_all = /\<!--#include\s*file\s*=\s*(?:"|')([^"']+)(?:"|')\s*-->/gm;
       while ((match = match_all.exec(each.raw)) != null) {
         short_id = match[1];
+        full_id_a = full_id_b = short_id;
         if ('' === path.extname(short_id)) {
-          short_id += '.jade';
+          full_id_a += '.htm';
         }
-        full_id = path.join(dirpath, short_id);
-        if (full_id === file.filepath) {
+        if ('' === path.extname(short_id)) {
+          full_id_b += '.html';
+        }
+        full_id_a = path.join(dirpath, full_id_a);
+        full_id_b = path.join(dirpath, full_id_b);
+        if (full_id_a === file.filepath || full_id_b === file.filepath) {
           if (!this.is_partial(name)) {
             dependents.push(each);
           } else {

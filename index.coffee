@@ -41,11 +41,16 @@ module.exports = new class Index
       while (match = match_all.exec each.raw)?
 
         short_id = match[1]
-        short_id += '.jade' if '' is path.extname short_id
 
-        full_id = path.join dirpath, short_id
+        full_id_a = full_id_b = short_id
 
-        if full_id is file.filepath
+        full_id_a += '.htm' if '' is path.extname short_id
+        full_id_b += '.html' if '' is path.extname short_id
+
+        full_id_a = path.join dirpath, full_id_a
+        full_id_b = path.join dirpath, full_id_b
+
+        if full_id_a is file.filepath or full_id_b is file.filepath
           if not @is_partial name
             dependents.push each
           else
