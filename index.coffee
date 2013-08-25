@@ -6,8 +6,6 @@ fs = require 'fs'
 
 module.exports = new class Index
 
-  polvo: true
-
   type: 'template'
   name: 'html'
   output: 'js'
