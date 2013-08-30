@@ -12,6 +12,8 @@ With this plugin, Polvo can handle HTML source files.
 
 You won't need to install it since it comes built in in Polvo.
 
+Enjoy.
+
 # Instructions
 
 Just put your `.html` or `.htm` files in your `input dirs` and it will be
