@@ -3,6 +3,7 @@
 
 path = require 'path'
 fs = require 'fs'
+clone = require 'regexp-clone'
 
 module.exports = new class Index
 
@@ -13,68 +14,77 @@ module.exports = new class Index
   ext: /\.html?$/m
   exts: ['.html', '.html']
 
+  has_includes = /\<!--#include\s*file\s*=/gm
+  match_all = /\<!--#include\s*file\s*=\s*(?:"|')([^"']+)(?:"|')\s*-->/gm
+
   partials: on
-  is_partial:(filepath)-> /^_/m.test path.basename filepath
+
+  is_partial:( filepath )->
+    /^_/m.test path.basename filepath
 
   compile:( filepath, source, debug, error, done )->
     
-    rendered = @render_partials filepath, source
+    rendered = @render_partials filepath, source, error
     escaped = rendered.replace(/\n/g, '\\\n').replace /'/g, '\\\''
     compiled = "module.exports = function() { return '#{escaped}'; };"
 
     done compiled, null
 
-  resolve_dependents:(file, files)->
+  resolve_dependents:(filepath, files)->
     dependents = []
-    has_includes = /\<!--#include\s*file\s*=/gm
 
     for each in files
-
-      continue if not has_includes.test each.raw
+      [has, all] = [clone(has_includes), clone(match_all)]
+      continue if not has.test each.raw
 
       dirpath = path.dirname each.filepath
       name = path.basename each.filepath
-      match_all = /\<!--#include\s*file\s*=\s*(?:"|')([^"']+)(?:"|')\s*-->/gm
 
-      while (match = match_all.exec each.raw)?
-
+      while (match = all.exec each.raw)?
         short_id = match[1]
 
-        full_id_a = full_id_b = short_id
-
-        full_id_a += '.htm' if '' is path.extname short_id
-        full_id_b += '.html' if '' is path.extname short_id
+        full_id_a = short_id.replace(@ext, '') + '.htm'
+        full_id_b = short_id.replace(@ext, '') + '.html'
 
         full_id_a = path.join dirpath, full_id_a
         full_id_b = path.join dirpath, full_id_b
 
-        if full_id_a is file.filepath or full_id_b is file.filepath
+        if full_id_a is filepath or full_id_b is filepath
           if not @is_partial name
             dependents.push each
           else
-            dependents = dependents.concat @resolve_dependents each, files
+            sub = @resolve_dependents each.filepath, files
+            dependents = dependents.concat sub
 
     dependents
 
-  render_partials:( filepath, source )->
+  render_partials:( filepath, source, error )->
+    [has, all] = [clone(has_includes), clone(match_all)]
+    return source if not has.test source
 
-    has_includes = /\<!--#include\s*file\s*=/gm
-    match_all = /\<!--#include\s*file\s*=\s*(?:"|')([^"']+)(?:"|')\s*-->/gm
+    buffer = source
+    while (match = all.exec source)?
+      full = match[0]
+      include = match[1]
 
-    if not has_includes.test source
-      return source
-
-    contents = source
-    while (match = match_all.exec contents)
       include_path = path.join (path.dirname filepath), match[1]
-      include_path += '.html'
 
-      if fs.existsSync include_path
-        include_contents = do (fs.readFileSync include_path).toString
+      include_a = include_path.replace(@ext, '') + '.html'
+      include_b = include_path.replace(@ext, '') + '.htm'
+
+      partial_content = null
+      if fs.existsSync include_a
+        partial_content = fs.readFileSync(include_a).toString()
+        partial_content = @render_partials include_a, partial_content, error
+
+      else if fs.existsSync include_b
+        partial_content = fs.readFileSync(include_b).toString()
+        partial_content = @render_partials include_b, partial_content, error
+
       else
-        include_contents = ''
-        error "File #{include_path} do not exist"
+        partial_content = ''
+        error "file '#{include}' do not exist for '#{filepath}'"
 
-      contents = contents.replace match[0], include_contents
+      buffer = buffer.replace full, partial_content
 
-    return contents
+    buffer

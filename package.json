@@ -11,13 +11,14 @@
     "tool",
     "html"
   ],
-  "main": "index.js",
+  "main": "lib",
   "repository": {
     "type": "git",
     "url": "http://github.com/polvo/polvo-html"
   },
   "dependencies": {
-    "source-map-support": "0.2.x"
+    "source-map-support": "0.2.x",
+    "regexp-clone": "0.0.x"
   },
   "devDependencies": {
     "coffee-script": "1.6.x",
