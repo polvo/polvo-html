@@ -1,8 +1,8 @@
 # Polvo HTML
 
-With this plugin, Polvo can handle CoffeeScript source files.
-
 [![Stories in Ready](https://badge.waffle.io/polvo/polvo-html.png)](https://waffle.io/polvo/polvo-html)
+
+[![Build Status](https://secure.travis-ci.org/polvo/polvo-html.png)](http://travis-ci.org/polvo/polvo-html) [![Coverage Status](https://coveralls.io/repos/polvo/polvo-html/badge.png)](https://coveralls.io/r/polvo/polvo-html)
 
 [![Dependency Status](https://gemnasium.com/polvo/polvo-html.png)](https://gemnasium.com/polvo/polvo-html) [![NPM version](https://badge.fury.io/js/polvo-html.png)](http://badge.fury.io/js/polvo-html)
 
